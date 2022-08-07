@@ -13,47 +13,54 @@ export class LoginService {
     ) {}
 
     async login(userInfo: LoginUserDto) {
-        const user = await this.userRepo.findOne({
-            email: userInfo.email,
-        });
+        try {
+            const user = await this.userRepo.findOne({
+                email: userInfo.email,
+            });
+            if (!user) {
+                const newUser = new User();
+                newUser.email = userInfo.email;
+                newUser.deviceId = userInfo.deviceId;
+                newUser.loginType = userInfo.loginType;
+                await this.userRepo.save(newUser);
+                return {
+                    code: 0,
+                    status: 'success',
+                    message: 'Шинэ хэрэглэгчийг амжилттай бүртгэлээ',
+                };
+            }
 
-        if (!user) {
-            const newUser = new User();
-            newUser.email = userInfo.email;
-            newUser.deviceId = userInfo.deviceId;
-            newUser.loginType = userInfo.loginType;
+            if (user && !user.deviceId) {
+                user.deviceId = userInfo.deviceId;
+
+                await this.userRepo.save(user);
+                return {
+                    code: 0,
+                    status: 'success',
+                    message: 'Хэрэглэгчийг амжилттай шинэчлэлээ',
+                };
+            }
+
+            if (user && user.deviceId !== userInfo.deviceId) {
+                return {
+                    code: 255,
+                    status: 'fail',
+                    message: `Та анх бүртгүүлсэн төхөөрөмжөөсөө хандана уу.`,
+                };
+            }
 
             return {
                 code: 0,
                 status: 'success',
-                message: 'Шинэ хэрэглэгчийг амжилттай бүртгэлээ',
+                message: 'Амжилттай нэвтэрлээ',
             };
-        }
-
-        if (user && !user.deviceId) {
-            user.deviceId = userInfo.deviceId;
-
-            await this.userRepo.save(user);
-            return {
-                code: 0,
-                status: 'success',
-                message: 'Хэрэглэгчийг амжилттай шинэчлэлээ',
-            };
-        }
-
-        if (user && user.deviceId !== userInfo.deviceId) {
+        } catch (error) {
             return {
                 code: 255,
                 status: 'fail',
-                message: `Хэрэглэгчийн бүртгүүлсэн төхөөрөмж тохирохгүй байна.`,
+                message: 'Уучлаарай алдаа гарлаа',
             };
         }
-
-        return {
-            code: 255,
-            status: 'success',
-            message: 'Амжилттай нэвтэрлээ',
-        };
     }
 
     // async findUser(email: string) {
