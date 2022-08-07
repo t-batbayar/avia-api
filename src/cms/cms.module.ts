@@ -8,6 +8,7 @@ import { CMS_SESSION_CONFIG } from '../../config/cmsSessionConfig';
 import { CmsAuthModule } from './cms-auth/cms-auth.module';
 import { CmsUsersModule } from './cms-users/cms-users.module';
 import { DescriptionModule } from './description/description.module';
+import { PaymentStatusModule } from './payment-status/payment-status.module';
 import { PracticeModule } from './practice/practice.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { SubPracticeModule } from './sub-practice/sub-practice.module';
@@ -52,6 +53,10 @@ const aviaAdminPrefix = 'admin';
                 path: aviaAdminPrefix,
                 module: SubPracticeModule,
             },
+            {
+                path: aviaAdminPrefix,
+                module: PaymentStatusModule,
+            },
         ]),
         CmsAuthModule,
         CmsUsersModule,
@@ -62,6 +67,7 @@ const aviaAdminPrefix = 'admin';
         PracticeModule,
         SubPracticeModule,
         UsersModule,
+        PaymentStatusModule,
     ],
     controllers: [],
     providers: [],

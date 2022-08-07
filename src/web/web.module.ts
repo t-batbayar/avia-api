@@ -6,6 +6,7 @@ import { PrivacyModule } from './privacy/privacy.module';
 import { TermsModule } from './terms/terms.module';
 import { UsageModule } from './usage/usage.module';
 import { LoginModule } from './login/login.module';
+import { PaymentStatusModule } from './payment-status/payment-status.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { LoginModule } from './login/login.module';
         TermsModule,
         UsageModule,
         LoginModule,
+        PaymentStatusModule,
     ],
     controllers: [],
     providers: [],
