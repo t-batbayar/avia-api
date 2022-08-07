@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+    dev:
+        container_name: golomt_api_new_dev
+        image: golomt-api-new-dev:1.0.0
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile
+        command: npm run start:debug
+        ports:
+            - 13000:13000
+            - 9229:9229
+        networks:
+            - golomt
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+    prod:
+        container_name: golomt_api_new_prod
+        image: golomt-api-new-prod:1.0.0
+        build:
+            context: .
+            target: production
+            dockerfile: ./Dockerfile
+        command: npm run start:prod
+        ports:
+            - 13000:13000
+            - 9229:9229
+        networks:
+            - golomt
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+
+networks:
+    golomt:

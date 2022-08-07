@@ -1,0 +1,14 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 33069,
+    "username": "root",
+    "password": "root",
+    "database": "db_name",
+    "entities": ["src/**/*.entity.ts"],
+    "migrationsTableName": "migration",
+    "migrations": ["src/migration/*.ts"],
+    "cli": {
+        "migrationsDir": "src/migration"
+    }
+}
