@@ -48,8 +48,6 @@ public/review
 # Resource
 resource/*
 
-.env
-.env.local*
-.env.development*
+.env.*
 
 ormconfig.json
