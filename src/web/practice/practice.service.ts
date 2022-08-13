@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { PaymentStatus } from '../../cms/payment-status/entities/payment-status.entity';
 import { Practice } from '../../cms/practice/entities/practice.entity';
 import { User } from '../../cms/users/entities/user.entity';
 
@@ -14,6 +15,9 @@ export class PracticeService {
 
         @InjectRepository(User)
         private userRepo: Repository<User>,
+
+        @InjectRepository(PaymentStatus)
+        private paymentStatusRepo: Repository<PaymentStatus>,
 
         private readonly configService: ConfigService,
     ) {}
@@ -28,6 +32,10 @@ export class PracticeService {
             deviceId: userDeviceId,
             loginType: userLoginType,
         });
+
+        if (!user) {
+            throw new NotFoundException("Sorry couldn't find the user");
+        }
 
         if (user.userIsBlocked) {
             return [];
@@ -55,8 +63,16 @@ export class PracticeService {
             },
         });
 
+        const paymentStatus = await this.paymentStatusRepo.findOne({
+            order: {
+                id: 'DESC',
+            },
+        });
+
         let result = [...practices];
-        if (!userIsActive) {
+        if (!paymentStatus.paymentEnabled) {
+            return result;
+        } else if (!userIsActive) {
             result = practices.filter((practice) => {
                 return freeLetters.includes(practice.useg.toUpperCase());
             });
