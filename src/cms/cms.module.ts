@@ -57,6 +57,10 @@ const aviaAdminPrefix = 'admin';
                 path: aviaAdminPrefix,
                 module: PaymentStatusModule,
             },
+            {
+                path: aviaAdminPrefix,
+                module: UsersModule,
+            },
         ]),
         CmsAuthModule,
         CmsUsersModule,

@@ -7,6 +7,7 @@ import {
     Patch,
     Post,
     UploadedFiles,
+    UseGuards,
     UseInterceptors,
     UsePipes,
     ValidationPipe,
@@ -15,6 +16,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { multerResourceOptions } from '../../../config/resourceUploadConfig';
+import { CmsGuard } from '../../common/guards/cms.guard';
 import { CreateSubPracticeDto } from './dto/create-sub-practice.dto';
 import { SubPracticeFiles } from './dto/sub-practice-files.dto';
 import { UpdateSubPracticeDto } from './dto/update-sub-practice.dto';
@@ -22,6 +24,7 @@ import { SubPracticeService } from './sub-practice.service';
 
 @ApiTags('CMS SubPractice')
 @Controller('sub-practice/:id')
+@UseGuards(CmsGuard)
 export class SubPracticeController {
     constructor(private readonly subPracticeService: SubPracticeService) {}
 

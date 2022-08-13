@@ -30,6 +30,14 @@ export class LoginService {
                 };
             }
 
+            if (user && user.userIsBlocked) {
+                return {
+                    code: 255,
+                    status: 'fail',
+                    message: 'Уучлаарай хэрэглэгч нэвтрэхийг хориглосон байна.',
+                };
+            }
+
             if (user && !user.deviceId) {
                 user.deviceId = userInfo.deviceId;
 

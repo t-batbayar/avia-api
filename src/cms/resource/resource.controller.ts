@@ -20,10 +20,7 @@ import { ResourceService } from './resource.service';
 @CmsRoles(CmsUserRoles.ADMIN, CmsUserRoles.ANALYST, CmsUserRoles.PUBLISHER)
 @UseGuards(CmsRolesGuard)
 export class ResourceController {
-    constructor(
-        private readonly resourceService: ResourceService,
-        private readonly configService: ConfigService,
-    ) {}
+    constructor(private readonly configService: ConfigService) {}
 
     @Post('wysiwyg-upload')
     @UseInterceptors(FileInterceptor('upload', multerImageOptions('resource')))

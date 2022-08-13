@@ -10,42 +10,39 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { CmsRoles } from '../../common/decorators/cms-roles.decorator';
-import { CmsRolesGuard } from '../../common/guards/cms-roles.guard';
-import { CmsUserRoles } from '../cms-users/entities/cms-user.entity';
+import { CmsGuard } from '../../common/guards/cms.guard';
 import { CreateTermsDto } from './dto/create-terms.dto';
 import { UpdateTermsDto } from './dto/update-terms.dto';
 import { TermsService } from './terms.service';
 
 @ApiTags('CMS  terms')
 @Controller('terms')
-// @CmsRoles(CmsUserRoles.ADMIN, CmsUserRoles.ANALYST, CmsUserRoles.PUBLISHER)
-// @UseGuards(CmsRolesGuard)
+@UseGuards(CmsGuard)
 export class TermsController {
-    constructor(private readonly TermsService: TermsService) {}
+    constructor(private readonly termsService: TermsService) {}
 
     @Post()
     create(@Body() createTermsDto: CreateTermsDto) {
-        return this.TermsService.create(createTermsDto);
+        return this.termsService.create(createTermsDto);
     }
 
     @Get()
     findAll() {
-        return this.TermsService.findAll();
+        return this.termsService.findAll();
     }
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.TermsService.findOne(+id);
+        return this.termsService.findOne(+id);
     }
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateTermsDto: UpdateTermsDto) {
-        return this.TermsService.update(+id, updateTermsDto);
+        return this.termsService.update(+id, updateTermsDto);
     }
 
     @Delete(':id')
     remove(@Param('id') id: string) {
-        return this.TermsService.remove(+id);
+        return this.termsService.remove(+id);
     }
 }

@@ -10,33 +10,30 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { CmsRoles } from '../../common/decorators/cms-roles.decorator';
-import { CmsRolesGuard } from '../../common/guards/cms-roles.guard';
-import { CmsUserRoles } from '../cms-users/entities/cms-user.entity';
+import { CmsGuard } from '../../common/guards/cms.guard';
 import { DescriptionService } from './description.service';
 import { CreateDescriptionDto } from './dto/create-description.dto';
 import { UpdateDescriptionDto } from './dto/update-description.dto';
 
 @ApiTags('CMS  description')
 @Controller('description')
-// @CmsRoles(CmsUserRoles.ADMIN, CmsUserRoles.ANALYST, CmsUserRoles.PUBLISHER)
-// @UseGuards(CmsRolesGuard)
+@UseGuards(CmsGuard)
 export class DescriptionController {
-    constructor(private readonly DescriptionService: DescriptionService) {}
+    constructor(private readonly descriptionService: DescriptionService) {}
 
     @Post()
     create(@Body() createDescriptionDto: CreateDescriptionDto) {
-        return this.DescriptionService.create(createDescriptionDto);
+        return this.descriptionService.create(createDescriptionDto);
     }
 
     @Get()
     findAll() {
-        return this.DescriptionService.findAll();
+        return this.descriptionService.findAll();
     }
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.DescriptionService.findOne(+id);
+        return this.descriptionService.findOne(+id);
     }
 
     @Patch(':id')
@@ -44,11 +41,11 @@ export class DescriptionController {
         @Param('id') id: string,
         @Body() updateDescriptionDto: UpdateDescriptionDto,
     ) {
-        return this.DescriptionService.update(+id, updateDescriptionDto);
+        return this.descriptionService.update(+id, updateDescriptionDto);
     }
 
     @Delete(':id')
     remove(@Param('id') id: string) {
-        return this.DescriptionService.remove(+id);
+        return this.descriptionService.remove(+id);
     }
 }

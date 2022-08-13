@@ -13,17 +13,11 @@ import {
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
-import {
-    FileFieldsInterceptor,
-    FileInterceptor,
-} from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-import { multerImageOptions } from '../../../config/imageUploadConfig';
 import { multerResourceOptions } from '../../../config/resourceUploadConfig';
-import { CmsRoles } from '../../common/decorators/cms-roles.decorator';
-import { CmsRolesGuard } from '../../common/guards/cms-roles.guard';
-import { CmsUserRoles } from '../cms-users/entities/cms-user.entity';
+import { CmsGuard } from '../../common/guards/cms.guard';
 import { CreatePracticeDto } from './dto/create-practice.dto';
 import { PracticeImages } from './dto/practice-images.dto';
 import { UpdatePracticeDto } from './dto/update-practice.dto';
@@ -31,8 +25,7 @@ import { PracticeService } from './practice.service';
 
 @ApiTags('CMS Practice')
 @Controller('practice')
-// @CmsRoles(CmsUserRoles.ADMIN, CmsUserRoles.ANALYST, CmsUserRoles.PUBLISHER)
-// @UseGuards(CmsRolesGuard)
+@UseGuards(CmsGuard)
 export class PracticeController {
     constructor(private readonly practiceService: PracticeService) {}
 

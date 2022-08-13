@@ -6,12 +6,15 @@ import {
     Param,
     Patch,
     Post,
+    UseGuards,
 } from '@nestjs/common';
 
+import { CmsGuard } from '../../common/guards/cms.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
+@UseGuards(CmsGuard)
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
@@ -24,6 +27,16 @@ export class UsersController {
     @Get()
     findAll() {
         return this.usersService.findAll();
+    }
+
+    @Post('block/:id')
+    blockUser(@Param('id') id: string) {
+        return this.usersService.blockUser(+id);
+    }
+
+    @Post('unblock/:id')
+    unBlockUser(@Param('id') id: string) {
+        return this.usersService.unblockUser(+id);
     }
 
     @Get(':id')

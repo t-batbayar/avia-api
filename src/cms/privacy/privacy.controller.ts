@@ -10,17 +10,14 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { CmsRoles } from '../../common/decorators/cms-roles.decorator';
-import { CmsRolesGuard } from '../../common/guards/cms-roles.guard';
-import { CmsUserRoles } from '../cms-users/entities/cms-user.entity';
+import { CmsGuard } from '../../common/guards/cms.guard';
 import { CreatePrivacyDto } from './dto/create-privacy.dto';
 import { UpdatePrivacyDto } from './dto/update-privacy.dto';
 import { PrivacyService } from './privacy.service';
 
 @ApiTags('CMS  privacy')
 @Controller('privacy')
-// @CmsRoles(CmsUserRoles.ADMIN, CmsUserRoles.ANALYST, CmsUserRoles.PUBLISHER)
-// @UseGuards(CmsRolesGuard)
+@UseGuards(CmsGuard)
 export class PrivacyController {
     constructor(private readonly PrivacyService: PrivacyService) {}
 

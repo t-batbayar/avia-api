@@ -16,4 +16,7 @@ export class User {
 
     @Column({ nullable: true })
     purchaseEndDate: Date;
+
+    @Column({ type: 'boolean', default: false })
+    userIsBlocked: boolean;
 }
