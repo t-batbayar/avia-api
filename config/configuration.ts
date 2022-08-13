@@ -10,4 +10,5 @@ export default registerAs(CONFIG_NAME_MAIN, () => ({
     domain: process.env.DOMAIN,
     apiDomain: process.env.API_URL,
     resourceFolder: process.env.RESOURCE_FOLDER_LOCATION,
+    freeLetters: process.env.FREE_LETTERS,
 }));

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Headers } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { PracticeService } from './practice.service';
@@ -9,7 +9,7 @@ export class PracticeController {
     constructor(private readonly practiceService: PracticeService) {}
 
     @Get()
-    findAll() {
-        return this.practiceService.findAll();
+    findAll(@Headers() headers) {
+        return this.practiceService.findAll(headers);
     }
 }
