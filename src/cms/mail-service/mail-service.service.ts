@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MailerService } from '@nestjs-modules/mailer';
+// import { MailerService } from '@nestjs-modules/mailer';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { In, LessThanOrEqual, Repository } from 'typeorm';
 
@@ -32,7 +32,7 @@ export class MailServiceService {
         @InjectPinoLogger(MailServiceService.name)
         private readonly logger: PinoLogger,
 
-        private readonly mailservice: MailerService,
+        // private readonly mailservice: MailerService,
         private readonly configService: ConfigService,
     ) {}
 
@@ -46,40 +46,39 @@ export class MailServiceService {
         const url = this.configService.get('main.domain');
 
         emailList.map((email) => {
-            this.mailservice
-                .sendMail({
-                    to: email,
-                    subject: 'Дуа шинэ мэдээ',
-                    template: './mail-template',
-                    context: {
-                        title: news.title,
-                        greeting: `Сайн байна уу, Дуа платформ шинэ мэдээ`,
-                        description: news.description,
-                        url: `${url}/category/#/news-detail/${news.id}`,
-                    },
-                })
-                .then((value) => {
-                    const successLog = new NewsMailLog();
-                    successLog.mailAddress = email;
-                    successLog.mailContentType = 'news';
-                    successLog.mailTitle = news.title;
-                    successLog.successfullySent = true;
-                    successLog.isCustomerEmail = !freeNews;
-                    this.newsMailLog.save(successLog);
-                })
-                .catch((error) => {
-                    const failLog = new NewsMailLog();
-                    failLog.mailAddress = email;
-                    failLog.mailContentType = 'news';
-                    failLog.mailTitle = news.title;
-                    failLog.successfullySent = false;
-                    failLog.isCustomerEmail = freeNews;
-                    this.newsMailLog.save(failLog);
-
-                    this.logger.error(`Error message: ${error.message}`, {
-                        stack: error.stack,
-                    });
-                });
+            // this.mailservice
+            //     .sendMail({
+            //         to: email,
+            //         subject: 'Дуа шинэ мэдээ',
+            //         template: './mail-template',
+            //         context: {
+            //             title: news.title,
+            //             greeting: `Сайн байна уу, Дуа платформ шинэ мэдээ`,
+            //             description: news.description,
+            //             url: `${url}/category/#/news-detail/${news.id}`,
+            //         },
+            //     })
+            //     .then((value) => {
+            //         const successLog = new NewsMailLog();
+            //         successLog.mailAddress = email;
+            //         successLog.mailContentType = 'news';
+            //         successLog.mailTitle = news.title;
+            //         successLog.successfullySent = true;
+            //         successLog.isCustomerEmail = !freeNews;
+            //         this.newsMailLog.save(successLog);
+            //     })
+            //     .catch((error) => {
+            //         const failLog = new NewsMailLog();
+            //         failLog.mailAddress = email;
+            //         failLog.mailContentType = 'news';
+            //         failLog.mailTitle = news.title;
+            //         failLog.successfullySent = false;
+            //         failLog.isCustomerEmail = freeNews;
+            //         this.newsMailLog.save(failLog);
+            //         this.logger.error(`Error message: ${error.message}`, {
+            //             stack: error.stack,
+            //         });
+            //     });
         });
     }
 

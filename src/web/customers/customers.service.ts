@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MailerService } from '@nestjs-modules/mailer';
+// import { MailerService } from '@nestjs-modules/mailer';
 import { compare, hash } from 'bcrypt';
 import { customAlphabet, nanoid, urlAlphabet } from 'nanoid';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
@@ -29,7 +29,7 @@ export class CustomersService {
         @InjectRepository(CustomerRole)
         private readonly customerRoleRepo: Repository<CustomerRole>,
 
-        private readonly mailservice: MailerService,
+        // private readonly mailservice: MailerService,
 
         private readonly configService: ConfigService,
 
@@ -93,23 +93,23 @@ export class CustomersService {
             await this.customerRepo.save(customer);
 
             const url = this.configService.get('main.domain');
-            this.mailservice
-                .sendMail({
-                    to: email,
-                    subject: 'ДУА платформ бүртгэл',
-                    template: './mail-template',
-                    context: {
-                        title: 'ДУА платформ бүртгэл баталгаажуулалт',
-                        greeting: `Сайн байна уу ${customer.lastName} ${customer.firstName}.`,
-                        description: `Эдийн засгийн мэдээ мэдээллийн нэгдсэн цэг ДУА судалгааны платформд бүртгүүлсэн таньд баярлалаа. Та доорх холбоосоор өөрийн бүртгэлээ баталгаажуулна уу.`,
-                        url: `${url}/customer-activate?token=${customer.verifyToken}`,
-                    },
-                })
-                .catch((error) => {
-                    this.logger.error(`Error message: ${error.message}`, {
-                        stack: error.stack,
-                    });
-                });
+            // this.mailservice
+            //     .sendMail({
+            //         to: email,
+            //         subject: 'ДУА платформ бүртгэл',
+            //         template: './mail-template',
+            //         context: {
+            //             title: 'ДУА платформ бүртгэл баталгаажуулалт',
+            //             greeting: `Сайн байна уу ${customer.lastName} ${customer.firstName}.`,
+            //             description: `Эдийн засгийн мэдээ мэдээллийн нэгдсэн цэг ДУА судалгааны платформд бүртгүүлсэн таньд баярлалаа. Та доорх холбоосоор өөрийн бүртгэлээ баталгаажуулна уу.`,
+            //             url: `${url}/customer-activate?token=${customer.verifyToken}`,
+            //         },
+            //     })
+            //     .catch((error) => {
+            //         this.logger.error(`Error message: ${error.message}`, {
+            //             stack: error.stack,
+            //         });
+            //     });
 
             return result;
         } catch (error) {
@@ -278,23 +278,23 @@ export class CustomersService {
             const updatedCustomer = await this.customerRepo.save(customer);
 
             const url = this.configService.get('main.domain');
-            this.mailservice
-                .sendMail({
-                    to: email,
-                    subject: 'ДУА платформ бүртгэл',
-                    template: './mail-template',
-                    context: {
-                        title: 'ДУА платформ нууц үг сэргээх',
-                        greeting: `Сайн байна уу ${customer.lastName} ${customer.firstName}.`,
-                        description: `Та дараах холбоосоор орж нууц үгээ сэргээнэ үү.`,
-                        url: `${url}/reset-password?token=${customer.verifyToken}`,
-                    },
-                })
-                .catch((error) => {
-                    this.logger.error(`Error message: ${error.message}`, {
-                        stack: error.stack,
-                    });
-                });
+            // this.mailservice
+            //     .sendMail({
+            //         to: email,
+            //         subject: 'ДУА платформ бүртгэл',
+            //         template: './mail-template',
+            //         context: {
+            //             title: 'ДУА платформ нууц үг сэргээх',
+            //             greeting: `Сайн байна уу ${customer.lastName} ${customer.firstName}.`,
+            //             description: `Та дараах холбоосоор орж нууц үгээ сэргээнэ үү.`,
+            //             url: `${url}/reset-password?token=${customer.verifyToken}`,
+            //         },
+            //     })
+            //     .catch((error) => {
+            //         this.logger.error(`Error message: ${error.message}`, {
+            //             stack: error.stack,
+            //         });
+            //     });
 
             return result;
         } catch (error) {
