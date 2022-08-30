@@ -1,13 +1,15 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { customAlphabet } from 'nanoid';
 import { lastValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 
 import { CONFIG_NAME_MAIN } from '../../../config/configuration';
-import { Payment } from './entities/payment.entity';
+import { User } from '../../cms/users/entities/user.entity';
+import { Payment, PaymentStatus } from './entities/payment.entity';
 
 @Injectable()
 export class PaymentService {
@@ -22,6 +24,11 @@ export class PaymentService {
 
         @InjectRepository(Payment)
         private paymentRepo: Repository<Payment>,
+
+        @InjectRepository(User)
+        private userRepo: Repository<User>,
+
+        @Inject(REQUEST) private request: any,
     ) {
         const { qpayUsername, qpayPassword, qpayUrl, qpayInvoiceCode } =
             configService.get(CONFIG_NAME_MAIN);
@@ -57,7 +64,7 @@ export class PaymentService {
             const result = await await lastValueFrom(getTokenObs);
             return result.data.access_token;
         } catch (error) {
-            console.log('TOKEN ERROR', error.message);
+            console.error('TOKEN ERROR', error.message);
         }
     }
 
@@ -76,12 +83,13 @@ export class PaymentService {
                 invoice_receiver_code: 'terminal',
                 invoice_description: 'Авиа нэг сарын багц авах',
                 amount: 100,
-                callback_uri: 'https://avia.m/api/payment/result',
+                callback_uri: `https://avia.mn/api/payment/result/${invoiceId}`,
             };
 
-            const payment = new Payment();
-            payment.invoiceId = invoiceId;
-            payment.userEmail = 'test@test.com';
+            const user = this.request.user;
+            const userEmail = user.email;
+            const userDeviceId = user.deviceId;
+            const userLoginType = user.loginType;
 
             const createInvoiceObs = this.httpService.post(
                 `${this.qpayUrl}/v2/invoice`,
@@ -95,6 +103,7 @@ export class PaymentService {
 
             const result = await await lastValueFrom(createInvoiceObs);
             const deeplinks = result.data.urls;
+            const qpayInvoiceId = result.data['invoice_id'];
             const formattedData = deeplinks
                 .map((link) => {
                     const bankName = link.name;
@@ -134,10 +143,65 @@ export class PaymentService {
                     return formatted;
                 })
                 .filter((data) => (data ? data : false));
-            console.log(formattedData);
+
+            const payment = new Payment();
+            payment.invoiceId = invoiceId;
+            payment.userEmail = userEmail;
+            payment.qpayId = qpayInvoiceId;
+            await this.paymentRepo.save(payment);
+
             return formattedData;
         } catch (error) {
-            console.log('CREATE INVOICE ERROR', error.message);
+            console.error('CREATE INVOICE ERROR', error.message);
+        }
+    }
+
+    async paymentResponse(invoiceId: string) {
+        const payment = await this.paymentRepo.findOne({
+            where: {
+                invoiceId,
+            },
+        });
+
+        const accessToken = await this.getAccessToken();
+
+        const requestBody = {
+            object_type: 'INVOICE',
+            object_id: payment.qpayId,
+            offset: {
+                page_number: 1,
+                page_limit: 10,
+            },
+        };
+
+        const checkInvoiceObs = this.httpService.post(
+            `${this.qpayUrl}/v2/payment/check`,
+            requestBody,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        const result = await await lastValueFrom(checkInvoiceObs);
+        const data = result.data;
+
+        if (
+            data['count'] > 1 &&
+            data['payment_status'] === PaymentStatus.PAID
+        ) {
+            const user = await this.userRepo.findOne({
+                where: {
+                    email: payment.userEmail,
+                },
+            });
+
+            const date = new Date();
+            date.setDate(date.getDate() + 30);
+            user.purchaseEndDate = date;
+            await this.userRepo.save(user);
+            // user.purchaseEndDate =
         }
     }
 }

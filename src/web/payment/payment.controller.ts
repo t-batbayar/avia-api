@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Response } from '@nestjs/common';
 
 import { PaymentService } from './payment.service';
 
@@ -9,5 +9,11 @@ export class PaymentController {
     @Get('bank-list')
     async getBankList() {
         return await this.paymentService.getBankList();
+    }
+
+    @Get('result/:invoiceId')
+    async paymentResult(@Param('invoiceId') invoiceId: string) {
+        await this.paymentService.paymentResponse(invoiceId);
+        return { body: 'SUCCESS' };
     }
 }
