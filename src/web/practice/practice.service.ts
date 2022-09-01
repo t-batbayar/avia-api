@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -20,6 +21,8 @@ export class PracticeService {
         private paymentStatusRepo: Repository<PaymentStatus>,
 
         private readonly configService: ConfigService,
+
+        @Inject(REQUEST) private request: any,
     ) {}
 
     async findAll(headers: { [key: string]: string }) {
@@ -69,14 +72,30 @@ export class PracticeService {
             },
         });
 
-        let result = [...practices];
-        if (!paymentStatus.paymentEnabled) {
-            return result;
-        } else if (!userIsActive) {
-            result = practices.filter((practice) => {
-                return freeLetters.includes(practice.useg.toUpperCase());
-            });
-        }
+        const result = practices.map((p) => {
+            const clonedPractice = { ...p, isActive: false };
+            if (
+                !paymentStatus.paymentEnabled ||
+                (paymentStatus.paymentEnabled && userIsActive)
+            ) {
+                clonedPractice.isActive = true;
+                return clonedPractice;
+            }
+
+            if (freeLetters.includes(p.useg)) {
+                clonedPractice.isActive = true;
+            }
+
+            return clonedPractice;
+        });
+
+        // if (!paymentStatus.paymentEnabled) {
+        //     return result;
+        // } else if (!userIsActive) {
+        //     result = practices.filter((practice) => {
+        //         return freeLetters.includes(practice.useg.toUpperCase());
+        //     });
+        // }
 
         return result;
     }
