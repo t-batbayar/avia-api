@@ -34,20 +34,25 @@ import { UsageModule } from './usage/usage.module';
 })
 export class WebModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
+        const prefix = 'api';
         consumer
             .apply(AuthMiddleware)
             .exclude(
                 {
-                    path: 'privacy',
+                    path: `${prefix}/privacy`,
                     method: RequestMethod.GET,
                 },
                 {
-                    path: 'terms',
+                    path: `${prefix}/terms`,
                     method: RequestMethod.GET,
                 },
                 {
-                    path: 'usage',
+                    path: `${prefix}/usage`,
                     method: RequestMethod.GET,
+                },
+                {
+                    path: `${prefix}/login`,
+                    method: RequestMethod.POST,
                 },
             )
             .forRoutes('*');
