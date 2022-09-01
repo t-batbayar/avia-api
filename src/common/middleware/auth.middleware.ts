@@ -18,7 +18,6 @@ export class AuthMiddleware implements NestMiddleware {
 
     async use(req: Request, res: Response, next: NextFunction) {
         const headers = req.headers;
-
         const email = headers['user-email'];
         const loginType = headers['user-login-type'];
         const deviceId = headers['user-device-id'];

@@ -19,7 +19,8 @@ export default class MainDatabaseConfigService
             database: process.env.DB_MAIN_DATABASE,
             logging: true,
             autoLoadEntities: true,
-            synchronize: process.env.ENVIRONMENT === 'dev',
+            // synchronize: process.env.ENVIRONMENT === 'dev',
+            synchronize: true,
         };
     }
 }
