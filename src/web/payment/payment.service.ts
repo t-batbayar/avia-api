@@ -83,7 +83,7 @@ export class PaymentService {
                 invoice_receiver_code: 'terminal',
                 invoice_description: 'Авиа нэг сарын багц авах',
                 amount: 100,
-                callback_uri: `https://avia.mn/api/webhook/${invoiceId}`,
+                callback_uri: `https://avia.mn/api/webhook?invoiceid=${invoiceId}`,
             };
 
             const user = this.request.user;
