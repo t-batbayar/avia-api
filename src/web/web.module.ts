@@ -54,6 +54,10 @@ export class WebModule implements NestModule {
                     path: `${prefix}/login`,
                     method: RequestMethod.POST,
                 },
+                {
+                    path: `${prefix}/payment/result/*`,
+                    method: RequestMethod.GET,
+                },
             )
             .forRoutes('*');
     }

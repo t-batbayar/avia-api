@@ -164,7 +164,7 @@ export class PaymentService {
         });
 
         const accessToken = await this.getAccessToken();
-
+        console.log('ACCESS TOKEN IS: ', accessToken);
         const requestBody = {
             object_type: 'INVOICE',
             object_id: payment.qpayId,
@@ -185,6 +185,7 @@ export class PaymentService {
         );
 
         const result = await await lastValueFrom(checkInvoiceObs);
+        console.log('TRANSACTION RESULT');
         const data = result.data;
 
         if (
@@ -200,7 +201,8 @@ export class PaymentService {
             const date = new Date();
             date.setDate(date.getDate() + 30);
             user.purchaseEndDate = date;
-            await this.userRepo.save(user);
+            const savedUser = await this.userRepo.save(user);
+            console.log('SAVED USER IS: ', savedUser);
             // user.purchaseEndDate =
         }
     }
