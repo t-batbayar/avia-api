@@ -186,7 +186,7 @@ export class PaymentService {
 
         const result = await await lastValueFrom(checkInvoiceObs);
         const data = result.data;
-
+        console.log('DATAAA', data);
         if (
             data['count'] > 1 &&
             data['payment_status'] === PaymentStatus.PAID
