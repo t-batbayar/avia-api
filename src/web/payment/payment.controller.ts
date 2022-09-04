@@ -13,7 +13,6 @@ export class PaymentController {
 
     @Get('result/:invoiceId')
     async paymentResult(@Param('invoiceId') invoiceId: string) {
-        console.log('INVOICE ID IS:', invoiceId);
         await this.paymentService.paymentResponse(invoiceId);
         return { body: 'SUCCESS' };
     }
