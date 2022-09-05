@@ -55,7 +55,7 @@ export class WebModule implements NestModule {
                     method: RequestMethod.POST,
                 },
                 {
-                    path: `${prefix}/webhook/(.*)`,
+                    path: `${prefix}/webhook(.*)`,
                     method: RequestMethod.GET,
                 },
             )
