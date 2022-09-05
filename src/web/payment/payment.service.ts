@@ -188,7 +188,7 @@ export class PaymentService {
         const data = result.data;
         if (
             data['count'] > 1 &&
-            data[0]['payment_status'] === PaymentStatus.PAID
+            data['rows'][0]['payment_status'] === PaymentStatus.PAID
         ) {
             const user = await this.userRepo.findOne({
                 where: {
