@@ -167,7 +167,7 @@ export class PaymentService {
 
         const requestBody = {
             object_type: 'INVOICE',
-            object_id: payment.invoiceId,
+            object_id: payment.qpayId,
             offset: {
                 page_number: 1,
                 page_limit: 10,
