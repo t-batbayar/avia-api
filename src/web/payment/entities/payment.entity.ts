@@ -7,11 +7,11 @@ import {
 } from 'typeorm';
 
 export enum PaymentStatus {
-    NEW,
-    FAILED,
-    PAID,
-    PARTIAL,
-    REFUNDED,
+    NEW = 'NEW',
+    FAILED = 'FAILED',
+    PAID = 'PAID',
+    PARTIAL = 'PARTIAL',
+    REFUNDED = 'REFUNDED',
 }
 
 @Entity({ name: 'payment' })
