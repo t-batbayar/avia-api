@@ -187,7 +187,7 @@ export class PaymentService {
         const result = await await lastValueFrom(checkInvoiceObs);
         const data = result.data;
         if (
-            data['count'] > 1 &&
+            data['count'] >= 1 &&
             data['rows'][0]['payment_status'] === PaymentStatus.PAID
         ) {
             const user = await this.userRepo.findOne({
