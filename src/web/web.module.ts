@@ -39,6 +39,10 @@ export class WebModule implements NestModule {
             .apply(AuthMiddleware)
             .exclude(
                 {
+                    path: `${prefix}/admin(.*)`,
+                    method: RequestMethod.ALL,
+                },
+                {
                     path: `${prefix}/privacy`,
                     method: RequestMethod.GET,
                 },
