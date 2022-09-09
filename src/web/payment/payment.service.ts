@@ -196,11 +196,16 @@ export class PaymentService {
                 },
             });
 
-            const date = new Date();
+            let date = new Date();
+
+            if (user.purchaseEndDate > date) {
+                date = user.purchaseEndDate;
+                date.setDate(date.getDate() + 30);
+            }
+
             date.setDate(date.getDate() + 30);
             user.purchaseEndDate = date;
             await this.userRepo.save(user);
-            // user.purchaseEndDate =
         }
     }
 }

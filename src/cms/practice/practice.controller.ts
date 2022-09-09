@@ -92,7 +92,7 @@ export class PracticeController {
     update(
         @UploadedFiles() files: PracticeImages,
         @Param('id') id: string,
-        @Body() updatePostDto: UpdatePracticeDto,
+        @Body() updatePostDto: any,
     ) {
         return this.practiceService.update(+id, updatePostDto, files);
     }
