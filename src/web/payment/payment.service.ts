@@ -201,9 +201,10 @@ export class PaymentService {
             if (user.purchaseEndDate > date) {
                 date = user.purchaseEndDate;
                 date.setDate(date.getDate() + 30);
+            } else {
+                date.setDate(date.getDate() + 30);
             }
 
-            date.setDate(date.getDate() + 30);
             user.purchaseEndDate = date;
             await this.userRepo.save(user);
         }
