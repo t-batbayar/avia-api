@@ -62,7 +62,7 @@ export class PracticeService {
 
         const practices = await this.practiceRepo.find({
             order: {
-                id: 'ASC',
+                order: 'ASC',
             },
         });
 

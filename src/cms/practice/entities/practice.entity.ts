@@ -23,6 +23,9 @@ export class Practice {
     @Column({ nullable: true })
     ongo: string;
 
+    @Column({ nullable: true, type: 'int' })
+    order: number;
+
     @Column({ nullable: true })
     tailbar: string;
 
