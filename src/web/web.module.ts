@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { User } from '../cms/users/entities/user.entity';
 import { AuthMiddleware } from '../common/middleware/auth.middleware';
+import { AccountModule } from './account/account.module';
 import { DescriptionModule } from './description/description.module';
 import { LoginModule } from './login/login.module';
 import { PaymentModule } from './payment/payment.module';
@@ -19,6 +20,7 @@ import { UsageModule } from './usage/usage.module';
 
 @Module({
     imports: [
+        AccountModule,
         DescriptionModule,
         PracticeModule,
         PrivacyModule,
