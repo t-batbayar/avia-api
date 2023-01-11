@@ -42,6 +42,8 @@ export class PracticeService {
         practice.beltgelUyeNeg = createPracticeDto.beltgelUyeNeg;
         practice.beltgelUyeHoyor = createPracticeDto.beltgelUyeHoyor;
         practice.beltgelUyeGurav = createPracticeDto.beltgelUyeGurav;
+        practice.hevshuulehShatNeg = createPracticeDto.hevshuulehShatNeg;
+        practice.hevshuulehShatHoyor = createPracticeDto.hevshuulehShatHoyor;
         practice.usegTaviltZurag = usegTaviltZurag
             ? usegTaviltZurag[0].filename
             : null;
@@ -142,6 +144,8 @@ export class PracticeService {
         practice.beltgelUyeNeg = updatePostDto.beltgelUyeNeg;
         practice.beltgelUyeHoyor = updatePostDto.beltgelUyeHoyor;
         practice.beltgelUyeGurav = updatePostDto.beltgelUyeGurav;
+        practice.hevshuulehShatNeg = updatePostDto.hevshuulehShatNeg;
+        practice.hevshuulehShatHoyor = updatePostDto.hevshuulehShatHoyor;
 
         return await this.practiceRepository.save(practice);
     }

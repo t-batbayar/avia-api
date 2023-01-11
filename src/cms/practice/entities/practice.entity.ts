@@ -29,34 +29,40 @@ export class Practice {
     @Column({ nullable: true })
     tailbar: string;
 
-    @Column()
+    @Column({ nullable: true })
     solijDuudah: string;
 
-    @Column()
+    @Column({ nullable: true })
     orhijDuudah: string;
 
-    @Column()
+    @Column({ nullable: true, type: 'text' })
     beltgelUyeNeg: string;
 
-    @Column()
+    @Column({ nullable: true })
     beltgelUyeHoyor: string;
 
-    @Column()
+    @Column({ nullable: true })
     beltgelUyeGurav: string;
+
+    @Column({ nullable: true, type: 'text' })
+    hevshuulehShatNeg: string;
+
+    @Column({ nullable: true, type: 'text' })
+    hevshuulehShatHoyor: string;
 
     @Column({ nullable: true })
     usegTaviltZurag: string;
 
-    @Column()
+    @Column({ nullable: true })
     shalgahZuragNeg: string;
 
-    @Column()
+    @Column({ nullable: true })
     shalgahZuragHoyor: string;
 
-    @Column()
+    @Column({ nullable: true })
     shalgahZuragGurav: string;
 
-    @Column()
+    @Column({ nullable: true })
     shalgahZuragDorov: string;
 
     @CreateDateColumn({ name: 'created_at' })

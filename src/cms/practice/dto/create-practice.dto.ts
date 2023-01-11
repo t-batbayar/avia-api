@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreatePracticeDto {
     @ApiProperty()
@@ -28,9 +28,21 @@ export class CreatePracticeDto {
 
     @ApiProperty()
     @IsString()
+    @IsOptional()
     beltgelUyeHoyor: string;
 
     @ApiProperty()
     @IsString()
+    @IsOptional()
     beltgelUyeGurav: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    hevshuulehShatNeg: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    hevshuulehShatHoyor: string;
 }
