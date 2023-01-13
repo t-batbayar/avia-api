@@ -26,7 +26,7 @@ export class Practice {
     @Column({ nullable: true, type: 'int' })
     order: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'text' })
     tailbar: string;
 
     @Column({ nullable: true })
