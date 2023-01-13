@@ -27,7 +27,7 @@ export class SubPractice {
     @Column()
     tailbar: string;
 
-    @Column()
+    @Column({ type: 'text' })
     shuleg: string;
 
     @Column()
