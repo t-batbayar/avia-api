@@ -118,21 +118,21 @@ export class SubPracticeService {
             );
         }
 
-        if (subPractice.thumbnail) {
-            try {
-                deleteFile(subPractice.thumbnail);
-            } catch (error) {
-                console.log(error.message);
-            }
-        }
+        // if (subPractice.thumbnail) {
+        //     try {
+        //         deleteFile(subPractice.thumbnail);
+        //     } catch (error) {
+        //         console.log(error.message);
+        //     }
+        // }
 
-        if (subPractice.video) {
-            try {
-                deleteFile(subPractice.video);
-            } catch (error) {
-                console.log(error.message);
-            }
-        }
+        // if (subPractice.video) {
+        //     try {
+        //         deleteFile(subPractice.video);
+        //     } catch (error) {
+        //         console.log(error.message);
+        //     }
+        // }
 
         for (const key in files) {
             // Delete if already same file exists
