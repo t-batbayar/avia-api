@@ -28,12 +28,6 @@ import { WebModule } from './web/web.module';
             cache: true,
             isGlobal: true,
         }),
-        // CacheModule.registerAsync({
-        //     imports: [ConfigModule],
-        //     useClass: CacheConfigService,
-        //     inject: [ConfigService],
-        // }),
-        // This is the "default" connection shouldn't have name property below connection
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             useClass: MainDatabaseConfig,
