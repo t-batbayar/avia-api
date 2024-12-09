@@ -1,4 +1,4 @@
-import { Options } from '@mikro-orm/core';
+import { Options, UnderscoreNamingStrategy } from '@mikro-orm/core';
 import { MySqlDriver } from '@mikro-orm/mysql';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
@@ -18,6 +18,7 @@ const mikroOrmConfig: Options = {
     connect: process.env.ENVIRONMENT !== 'test',
     metadataProvider: TsMorphMetadataProvider,
     driver: MySqlDriver,
+    namingStrategy: UnderscoreNamingStrategy,
     allowGlobalContext: true,
     migrations: {
         tableName: 'mikro_orm_migrations',

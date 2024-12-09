@@ -15,7 +15,7 @@ export default class MainDatabaseConfigService
     createMikroOrmOptions() {
         return {
             name: DB_CONNECTION,
-            debug: process.env.ENVIRONMENT === process.env.ENVIRONMENT_DEV,
+            debug: true,
             autoLoadEntities: false,
             ...mikroConfig,
         };

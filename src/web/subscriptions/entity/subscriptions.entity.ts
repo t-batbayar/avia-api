@@ -16,5 +16,5 @@ export class Subscriptions {
         nullable: true,
         onUpdate: () => new Date(),
     })
-    updatedAt: Date;
+    updatedAt = new Date();
 }

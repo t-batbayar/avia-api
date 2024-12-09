@@ -67,6 +67,7 @@ export class PracticeService {
         const publishedPractice = await this.practiceRepository
             .upsert(practice)
             .catch((err: any) => {
+                console.log(err);
                 try {
                     deleteFile(practice.usegTaviltZurag);
                     deleteFile(practice.shalgahZuragNeg);

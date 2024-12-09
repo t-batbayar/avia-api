@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { join } from 'path';
 
 export const deleteFile = (path: string) => {
-    const filePath = join(__dirname, '..', '..', 'public', 'resource', path);
+    const filePath = join(__dirname, '..', '..', 'public', '', path);
 
     fs.unlink(filePath, (error) => {
         if (error) {

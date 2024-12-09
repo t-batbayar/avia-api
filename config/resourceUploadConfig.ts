@@ -3,10 +3,15 @@ import { existsSync, mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
 import { nanoid } from 'nanoid';
 import { extname } from 'path';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export const multerResourceConfig = {
     dest: () => process.env.RESOURCE_FOLDER_LOCATION,
 };
+
+console.log(process.env.MAX_FILE_SIZE);
 
 const FILE_TYPES_REGEX = {
     image: new RegExp('^.*(jpe?g|png|gif)$', 'gi'),
@@ -37,6 +42,7 @@ export const multerResourceOptions = (
         ) {
             cb(null, true);
         } else {
+            console.log('FILE UPLOAD ERROR ');
             cb(
                 new HttpException(
                     `Unsupported file type ${extname(file.originalname)}`,

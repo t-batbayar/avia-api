@@ -46,7 +46,10 @@ public/register-page
 public/review
 
 # Resource
-resource/*
+public/*.png
+public/*.jpg
+public/*.jpeg
+public/*.gif
 !*.html
 !logo.png
 

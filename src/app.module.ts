@@ -35,6 +35,7 @@ import MainDatabaseConfigService from '../config/MainDatabaseConfigService';
         }),
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', '..', 'public'),
+            serveRoot: '/public/',
             exclude: ['/api*'],
         }),
         LoggerModule.forRoot({

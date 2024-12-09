@@ -58,7 +58,7 @@ export class Practice {
     createdAt = new Date();
 
     @Property({ onUpdate: () => new Date() })
-    updatedAt: Date;
+    updatedAt = new Date();
 
     @OneToMany(() => SubPractice, (subPractice) => subPractice.practice, {
         eager: true,

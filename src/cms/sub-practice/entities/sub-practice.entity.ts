@@ -34,5 +34,5 @@ export class SubPractice {
     createdAt = new Date();
 
     @Property({ name: 'updated_at', onUpdate: () => new Date() })
-    updatedAt: Date;
+    updatedAt = new Date();
 }
