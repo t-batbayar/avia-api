@@ -1,31 +1,31 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { REQUEST } from '@nestjs/core';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { PaymentStatus } from '../../cms/payment-status/entities/payment-status.entity';
 import { Practice } from '../../cms/practice/entities/practice.entity';
 import { User } from '../../cms/users/entities/user.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class PracticeService {
     constructor(
         @InjectRepository(Practice)
-        private practiceRepo: Repository<Practice>,
+        private practiceRepo: EntityRepository<Practice>,
 
         @InjectRepository(User)
-        private userRepo: Repository<User>,
+        private userRepo: EntityRepository<User>,
 
         @InjectRepository(PaymentStatus)
-        private paymentStatusRepo: Repository<PaymentStatus>,
+        private paymentStatusRepo: EntityRepository<PaymentStatus>,
 
         private readonly configService: ConfigService,
 
         @Inject(REQUEST) private request: any,
     ) {}
 
-    async findAll(headers: { [key: string]: string }) {
+    async findAll(headers: { [key: string]: string }): Promise<Practice[]> {
         const userEmail = headers['user-email'];
         const userLoginType = headers['user-login-type'];
         const userDeviceId = headers['user-device-id'];
@@ -60,17 +60,13 @@ export class PracticeService {
             userIsActive = true;
         }
 
-        const practices = await this.practiceRepo.find({
-            order: {
+        const practices = await this.practiceRepo.findAll({
+            orderBy: {
                 order: 'ASC',
             },
         });
 
-        const paymentStatus = await this.paymentStatusRepo.findOne({
-            order: {
-                id: 'DESC',
-            },
-        });
+        const paymentStatus = await this.paymentStatusRepo.findOne({});
 
         const result = practices.map((p) => {
             const clonedPractice = { ...p, isActive: false };

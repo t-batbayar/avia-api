@@ -1,21 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { Terms } from '../../cms/terms/entities/terms.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class TermsService {
     constructor(
         @InjectRepository(Terms)
-        private practiceRepo: Repository<Terms>,
+        private termsRepo: EntityRepository<Terms>,
     ) {}
 
     async findOne() {
-        return await this.practiceRepo.findOne({
-            order: {
-                id: 'DESC',
-            },
-        });
+        return await this.termsRepo.findOne({});
     }
 }

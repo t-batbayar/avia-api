@@ -1,21 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { Usage } from '../../cms/usage/entities/usage.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class UsageService {
     constructor(
         @InjectRepository(Usage)
-        private usageRepo: Repository<Usage>,
+        private usageRepo: EntityRepository<Usage>,
     ) {}
 
     async findOne() {
-        return await this.usageRepo.findOne({
-            order: {
-                id: 'DESC',
-            },
-        });
+        return await this.usageRepo.findOne({});
     }
 }

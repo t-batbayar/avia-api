@@ -1,48 +1,38 @@
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
-} from 'typeorm';
-
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { Practice } from '../../practice/entities/practice.entity';
 
 @Entity()
 export class SubPractice {
-    @PrimaryGeneratedColumn()
+    @PrimaryKey()
     id: number;
 
-    @Column()
+    @Property()
     ner: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     argachlal: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     zorilgo: string;
 
-    @Column()
+    @Property()
     tailbar: string;
 
-    @Column({ type: 'text' })
+    @Property({ type: 'text' })
     shuleg: string;
 
-    @Column()
+    @Property()
     thumbnail: string;
 
-    @Column()
+    @Property()
     video: string;
 
-    @ManyToOne(() => Practice, (practice) => practice.dasgaluud)
-    @JoinColumn()
-    practice: Practice;
+    @ManyToOne({ entity: () => Practice })
+    practice!: Practice;
 
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+    @Property({ name: 'created_at' })
+    createdAt = new Date();
 
-    @UpdateDateColumn({ name: 'updated_at' })
+    @Property({ name: 'updated_at', onUpdate: () => new Date() })
     updatedAt: Date;
 }

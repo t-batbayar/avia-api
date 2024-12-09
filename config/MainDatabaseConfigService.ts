@@ -1,31 +1,23 @@
+import { MikroOrmOptionsFactory } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
-const CONNECTION_TYPE = 'mysql';
+import mikroOrmConfig from './mikro-orm.config';
 export const DB_CONNECTION_MAIN = 'default';
+
+export const DB_CONNECTION = 'default';
+
+const mikroConfig = mikroOrmConfig;
 
 @Injectable()
 export default class MainDatabaseConfigService
-    implements TypeOrmOptionsFactory
+    implements MikroOrmOptionsFactory
 {
-    createTypeOrmOptions(): TypeOrmModuleOptions {
+    createMikroOrmOptions() {
         return {
-            name: DB_CONNECTION_MAIN,
-            type: CONNECTION_TYPE,
-            host: process.env.DB_MAIN_HOST,
-            port: +process.env.DB_MAIN_PORT,
-            username: process.env.DB_MAIN_USERNAME,
-            password: process.env.DB_MAIN_PASSWORD,
-            database: process.env.DB_MAIN_DATABASE,
-            logging: true,
-            autoLoadEntities: true,
-            // synchronize: process.env.ENVIRONMENT === 'dev',
-            synchronize: true,
+            name: DB_CONNECTION,
+            debug: process.env.ENVIRONMENT === process.env.ENVIRONMENT_DEV,
+            autoLoadEntities: false,
+            ...mikroConfig,
         };
     }
 }
-
-// export default registerAs(
-//     CONFIG_MAIN_DATABASE,
-//     (): ConnectionOptions => (),
-// );

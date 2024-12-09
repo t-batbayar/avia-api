@@ -77,9 +77,7 @@ const aviaAdminPrefix = 'admin';
     providers: [],
 })
 export class CmsModule implements NestModule {
-    constructor(
-        private configService: ConfigService, // @Inject(REDIS) private readonly redis: RedisClient,
-    ) {}
+    constructor(private configService: ConfigService) {}
 
     configure(consumer: MiddlewareConsumer) {
         consumer

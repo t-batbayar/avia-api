@@ -1,21 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { Subscriptions } from './entity/subscriptions.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class SubscriptionsService {
     constructor(
         @InjectRepository(Subscriptions)
-        private subscriptionRepo: Repository<Subscriptions>,
+        private subscriptionRepo: EntityRepository<Subscriptions>,
     ) {}
 
     async addSubscription(email: string) {
         const subscribedEmail = await this.subscriptionRepo.findOne({
-            where: {
-                email,
-            },
+            email,
         });
 
         if (subscribedEmail) {
@@ -25,6 +23,6 @@ export class SubscriptionsService {
         const newSubscription = new Subscriptions();
         newSubscription.email = email;
 
-        return await this.subscriptionRepo.save(newSubscription);
+        return await this.subscriptionRepo.insert(newSubscription);
     }
 }

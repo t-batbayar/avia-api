@@ -2,19 +2,19 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { format } from 'date-fns';
 import * as fileStreamRotator from 'file-stream-rotator';
 import { LoggerModule } from 'nestjs-pino';
 import { join } from 'path';
 import pino from 'pino';
 
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import cmsSessionConf from '../config/cmsSessionConfig';
 import configuration from '../config/configuration';
-import MainDatabaseConfig from '../config/MainDatabaseConfigService';
 import { CmsModule } from './cms/cms.module';
 import { AllExceptionFilter } from './common/filters/all-exception.filter';
 import { WebModule } from './web/web.module';
+import MainDatabaseConfigService from '../config/MainDatabaseConfigService';
 
 @Module({
     imports: [
@@ -25,13 +25,13 @@ import { WebModule } from './web/web.module';
                 '.env.local',
             ],
             load: [configuration, cmsSessionConf],
-            cache: true,
+            cache: false,
             isGlobal: true,
         }),
-        TypeOrmModule.forRootAsync({
+        MikroOrmModule.forRootAsync({
             imports: [ConfigModule],
-            useClass: MainDatabaseConfig,
             inject: [ConfigService],
+            useClass: MainDatabaseConfigService,
         }),
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', '..', 'public'),
@@ -50,7 +50,7 @@ import { WebModule } from './web/web.module';
                         filename: 'var/logs/info-%DATE%.log',
                         frequency: 'daily',
                         verbose: false,
-                        max_logs: 10,
+                        max_logs: '30d',
                     }),
                 ),
                 timestamp: () => {
@@ -63,7 +63,6 @@ import { WebModule } from './web/web.module';
         }),
         CmsModule,
         WebModule,
-        // MailModule,
     ],
     controllers: [],
     providers: [

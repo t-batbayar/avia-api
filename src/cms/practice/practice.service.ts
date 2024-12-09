@@ -1,7 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { Repository } from 'typeorm';
 
 import { createNotFoundMessage } from '../../../libs/createNotFoundMessage';
 import { deleteFile } from '../../../libs/deleteFile';
@@ -11,15 +9,19 @@ import { CreatePracticeDto } from './dto/create-practice.dto';
 import { PracticeImages } from './dto/practice-images.dto';
 import { UpdatePracticeDto } from './dto/update-practice.dto';
 import { Practice } from './entities/practice.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityManager, EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class PracticeService {
     constructor(
         @InjectRepository(Practice)
-        private practiceRepository: Repository<Practice>,
+        private practiceRepository: EntityRepository<Practice>,
 
         @InjectPinoLogger(MailService.name)
         private readonly logger: PinoLogger,
+
+        private em: EntityManager,
     ) {}
 
     async create(createPracticeDto: CreatePracticeDto, files: PracticeImages) {
@@ -63,7 +65,7 @@ export class PracticeService {
         console.log('PRACTICE', practice);
 
         const publishedPractice = await this.practiceRepository
-            .save(practice)
+            .upsert(practice)
             .catch((err: any) => {
                 try {
                     deleteFile(practice.usegTaviltZurag);
@@ -84,9 +86,9 @@ export class PracticeService {
         perPage?: number,
         isFeatured?: boolean,
     ): Promise<Practice[]> {
-        return await this.practiceRepository.find({
-            order: {
-                id: 'DESC',
+        return await this.practiceRepository.findAll({
+            orderBy: {
+                order: 'DESC',
             },
         });
 
@@ -147,7 +149,7 @@ export class PracticeService {
         practice.hevshuulehShatNeg = updatePostDto.hevshuulehShatNeg;
         practice.hevshuulehShatHoyor = updatePostDto.hevshuulehShatHoyor;
 
-        return await this.practiceRepository.save(practice);
+        return await this.practiceRepository.upsert(practice);
     }
 
     async remove(id: number) {
@@ -177,6 +179,6 @@ export class PracticeService {
             deleteFile(practice.shalgahZuragDorov);
         }
 
-        return await this.practiceRepository.delete(id);
+        return await this.em.remove(practice);
     }
 }

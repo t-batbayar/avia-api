@@ -3,17 +3,17 @@
 // dio.options.headers['user-device-id'] = loginInfo['deviceId'];
 
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { NextFunction, Request, Response } from 'express';
-import { Repository } from 'typeorm';
 
 import { User } from '../../cms/users/entities/user.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
     constructor(
         @InjectRepository(User)
-        private userRepo: Repository<User>,
+        private userRepo: EntityRepository<User>,
     ) {}
 
     async use(req: Request, res: Response, next: NextFunction) {
@@ -29,9 +29,7 @@ export class AuthMiddleware implements NestMiddleware {
         }
 
         const user = await this.userRepo.findOne({
-            where: {
-                email: email,
-            },
+            email: email,
         });
 
         if (!user || user.userIsBlocked) {

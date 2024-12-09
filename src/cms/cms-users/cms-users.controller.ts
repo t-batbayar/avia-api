@@ -19,8 +19,6 @@ import { CmsUserRoles } from './entities/cms-user.entity';
 
 @ApiTags('CMS users')
 @Controller('cms-users')
-// @CmsRoles(CmsUserRoles.ADMIN)
-// @UseGuards(CmsRolesGuard)
 export class CmsUsersController {
     constructor(private readonly cmsUsersService: CmsUsersService) {}
 

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { User } from '../../cms/users/entities/user.entity';
 import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User])],
+    imports: [MikroOrmModule.forFeature([User])],
     controllers: [AccountController],
     providers: [AccountService],
 })

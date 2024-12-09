@@ -1,25 +1,25 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { CreateUsageDto } from './dto/create-usage.dto';
 import { UpdateUsageDto } from './dto/update-usage.dto';
 import { Usage } from './entities/usage.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class UsageService {
     constructor(
         @InjectRepository(Usage)
-        private DescRepo: Repository<Usage>,
+        private DescRepo: EntityRepository<Usage>,
     ) {}
 
     async create(createUsageDto: CreateUsageDto) {
-        return await this.DescRepo.save(createUsageDto);
+        return await this.DescRepo.insert(createUsageDto);
     }
 
     async findAll() {
-        return await this.DescRepo.find({
-            order: {
+        return await this.DescRepo.findAll({
+            orderBy: {
                 id: 'DESC',
             },
         });
@@ -36,7 +36,7 @@ export class UsageService {
             throw new BadRequestException('Could not find the  usage');
         }
 
-        return await this.DescRepo.save({
+        return await this.DescRepo.upsert({
             id,
             ...updateUsageDto,
         });

@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { User } from '../../cms/users/entities/user.entity';
 import { LoginUserDto } from './dto/login-user.dto';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class LoginService {
     constructor(
         @InjectRepository(User)
-        private userRepo: Repository<User>,
+        private userRepo: EntityRepository<User>,
     ) {}
 
     async login(userInfo: LoginUserDto) {
@@ -22,7 +22,7 @@ export class LoginService {
                 newUser.email = userInfo.email;
                 newUser.deviceId = userInfo.deviceId;
                 newUser.loginType = userInfo.loginType;
-                await this.userRepo.save(newUser);
+                await this.userRepo.insert(newUser);
                 return {
                     code: 0,
                     status: 'success',
@@ -41,7 +41,7 @@ export class LoginService {
             if (user && !user.deviceId) {
                 user.deviceId = userInfo.deviceId;
 
-                await this.userRepo.save(user);
+                await this.userRepo.insert(user);
                 return {
                     code: 0,
                     status: 'success',

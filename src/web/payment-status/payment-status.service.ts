@@ -1,22 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { PaymentStatus } from '../../cms/payment-status/entities/payment-status.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class PaymentStatusService {
     constructor(
         @InjectRepository(PaymentStatus)
-        private privacyRepo: Repository<PaymentStatus>,
+        private privacyRepo: EntityRepository<PaymentStatus>,
     ) {}
 
     async findOne() {
-        const result = await this.privacyRepo.findOne({
-            order: {
-                id: 'DESC',
-            },
-        });
+        const result = await this.privacyRepo.findOne({});
         return result;
     }
 }

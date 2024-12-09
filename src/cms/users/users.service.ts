@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
-        private userRepo: Repository<User>,
+        private userRepo: EntityRepository<User>,
     ) {}
 
     create(createUserDto: CreateUserDto) {
@@ -18,7 +18,9 @@ export class UsersService {
     }
 
     findAll() {
-        return this.userRepo.find();
+        return this.userRepo.findAll({
+            orderBy: { id: 'DESC' },
+        });
     }
 
     findOne(id: number) {
@@ -40,7 +42,7 @@ export class UsersService {
         }
 
         user.userIsBlocked = true;
-        return await this.userRepo.save(user);
+        return await this.userRepo.upsert(user);
     }
 
     async unblockUser(id: number) {
@@ -50,6 +52,6 @@ export class UsersService {
         }
 
         user.userIsBlocked = false;
-        return await this.userRepo.save(user);
+        return await this.userRepo.upsert(user);
     }
 }

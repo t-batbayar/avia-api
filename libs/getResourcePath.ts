@@ -5,15 +5,15 @@ export const getResourcePath = (fileName: string): Promise<string> => {
     const fileSearchVal = resourceFolder + '/**/' + fileName;
 
     return new Promise((resolve, reject) => {
-        glob(fileSearchVal, (err, files) => {
-            console.log(files);
-            if (err) {
-                reject(err);
-            }
-
-            if (files.length) {
-                resolve(files[0]);
-            }
-        });
+        glob(fileSearchVal)
+            .then((files) => {
+                console.log(files);
+                if (files.length) {
+                    resolve(files[0]);
+                } else {
+                    reject(new Error('No files found'));
+                }
+            })
+            .catch((err) => reject(err));
     });
 };

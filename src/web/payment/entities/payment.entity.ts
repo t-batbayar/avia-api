@@ -1,10 +1,4 @@
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 export enum PaymentStatus {
     NEW = 'NEW',
@@ -14,23 +8,23 @@ export enum PaymentStatus {
     REFUNDED = 'REFUNDED',
 }
 
-@Entity({ name: 'payment' })
+@Entity({ tableName: 'payment' })
 export class Payment {
-    @PrimaryGeneratedColumn()
+    @PrimaryKey()
     id: number;
 
-    @Column({ name: 'invoice_id' })
+    @Property({ name: 'invoice_id' })
     invoiceId: string;
 
-    @Column({ name: 'user_email' })
+    @Property({ name: 'user_email' })
     userEmail: string;
 
-    @Column({ name: 'qpay_id', nullable: false })
+    @Property({ name: 'qpay_id', nullable: false })
     qpayId: string;
 
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+    @Property({ name: 'created_at' })
+    createdAt = new Date();
 
-    @UpdateDateColumn({ name: 'updated_at' })
+    @Property({ name: 'updated_at', onUpdate: () => new Date() })
     updatedAt: Date;
 }

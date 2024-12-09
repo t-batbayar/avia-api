@@ -1,7 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { Repository } from 'typeorm';
 
 import { createNotFoundMessage } from '../../../libs/createNotFoundMessage';
 import { deleteFile } from '../../../libs/deleteFile';
@@ -12,18 +10,22 @@ import { CreateSubPracticeDto } from './dto/create-sub-practice.dto';
 import { SubPracticeFiles } from './dto/sub-practice-files.dto';
 import { UpdateSubPracticeDto } from './dto/update-sub-practice.dto';
 import { SubPractice } from './entities/sub-practice.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityManager, EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class SubPracticeService {
     constructor(
         @InjectRepository(SubPractice)
-        private subPracticeRepository: Repository<SubPractice>,
+        private subPracticeRepository: EntityRepository<SubPractice>,
 
         @InjectRepository(Practice)
-        private practiceRepository: Repository<Practice>,
+        private practiceRepository: EntityRepository<Practice>,
 
         @InjectPinoLogger(MailService.name)
         private readonly logger: PinoLogger,
+
+        private em: EntityManager,
     ) {}
 
     async create(
@@ -60,7 +62,7 @@ export class SubPracticeService {
         //     : '';
 
         const publishedSubPractice = await this.subPracticeRepository
-            .save(subPractice)
+            .insert(subPractice)
             .catch((err: any) => {
                 try {
                     deleteFile(subPractice.thumbnail);
@@ -148,7 +150,7 @@ export class SubPracticeService {
         subPractice.zorilgo = updatePostDto.zorilgo;
         subPractice.tailbar = updatePostDto.tailbar;
         subPractice.shuleg = updatePostDto.shuleg;
-        return await this.subPracticeRepository.save(subPractice);
+        return await this.subPracticeRepository.upsert(subPractice);
     }
 
     async remove(sid: number) {
@@ -168,6 +170,6 @@ export class SubPracticeService {
             deleteFile(subPractice.video);
         }
 
-        return await this.subPracticeRepository.delete(sid);
+        return await this.em.remove(subPractice);
     }
 }

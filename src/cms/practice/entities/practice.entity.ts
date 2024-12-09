@@ -1,79 +1,68 @@
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    Index,
-    JoinColumn,
-    ManyToOne,
-    OneToMany,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
-} from 'typeorm';
-
+import { Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { SubPractice } from '../../sub-practice/entities/sub-practice.entity';
 
 @Entity()
 export class Practice {
-    @PrimaryGeneratedColumn()
+    @PrimaryKey()
     id: number;
 
-    @Column()
+    @Property()
     useg: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     ongo: string;
 
-    @Column({ nullable: true, type: 'int' })
+    @Property({ nullable: true, type: 'int' })
     order: number;
 
-    @Column({ nullable: true, type: 'text' })
+    @Property({ nullable: true, type: 'text' })
     tailbar: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     solijDuudah: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     orhijDuudah: string;
 
-    @Column({ nullable: true, type: 'text' })
+    @Property({ nullable: true, type: 'text' })
     beltgelUyeNeg: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     beltgelUyeHoyor: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     beltgelUyeGurav: string;
 
-    @Column({ nullable: true, type: 'text' })
+    @Property({ nullable: true, type: 'text' })
     hevshuulehShatNeg: string;
 
-    @Column({ nullable: true, type: 'text' })
+    @Property({ nullable: true, type: 'text' })
     hevshuulehShatHoyor: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     usegTaviltZurag: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     shalgahZuragNeg: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     shalgahZuragHoyor: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     shalgahZuragGurav: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     shalgahZuragDorov: string;
 
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+    @Property({ name: 'created_at' })
+    createdAt = new Date();
 
-    @UpdateDateColumn({ name: 'updated_at' })
+    @Property({ onUpdate: () => new Date() })
     updatedAt: Date;
 
     @OneToMany(() => SubPractice, (subPractice) => subPractice.practice, {
         eager: true,
-        onDelete: 'SET NULL',
+        orphanRemoval: false,
     })
     dasgaluud: SubPractice[];
 }

@@ -1,25 +1,25 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { CreateTermsDto } from './dto/create-terms.dto';
 import { UpdateTermsDto } from './dto/update-terms.dto';
 import { Terms } from './entities/terms.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class TermsService {
     constructor(
         @InjectRepository(Terms)
-        private DescRepo: Repository<Terms>,
+        private DescRepo: EntityRepository<Terms>,
     ) {}
 
     async create(createTermsDto: CreateTermsDto) {
-        return await this.DescRepo.save(createTermsDto);
+        return await this.DescRepo.insert(createTermsDto);
     }
 
     async findAll() {
-        return await this.DescRepo.find({
-            order: {
+        return await this.DescRepo.findAll({
+            orderBy: {
                 id: 'DESC',
             },
         });
@@ -36,7 +36,7 @@ export class TermsService {
             throw new BadRequestException('Could not find the  terms');
         }
 
-        return await this.DescRepo.save({
+        return await this.DescRepo.upsert({
             id,
             ...updateTermsDto,
         });

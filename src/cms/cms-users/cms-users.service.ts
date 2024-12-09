@@ -3,29 +3,28 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
-import { Repository } from 'typeorm';
 
 import { createNotFoundMessage } from '../../../libs/createNotFoundMessage';
 import { CreateCmsUserDto } from './dto/create-cms-user.dto';
 import { UpdateCmsUserDto } from './dto/update-cms-user.dto';
 import { CmsUser } from './entities/cms-user.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityManager, EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class CmsUsersService {
     constructor(
         @InjectRepository(CmsUser)
-        private cmsUserRepository: Repository<CmsUser>,
+        private cmsUserRepository: EntityRepository<CmsUser>,
+        private readonly em: EntityManager,
     ) {}
 
     async registerUser(
         user: CreateCmsUserDto,
     ): Promise<Omit<CmsUser, 'password'>> {
         const existingUser = await this.cmsUserRepository.findOne({
-            where: {
-                email: user.email,
-            },
+            email: user.email,
         });
 
         if (user.password !== user.confirmationPassword) {
@@ -44,15 +43,15 @@ export class CmsUsersService {
 
         const hashedPassword = await this.hashPassword(user.password);
 
-        return await this.cmsUserRepository.save({
+        return await this.cmsUserRepository.upsert({
             ...newCmsUser,
             password: hashedPassword,
         });
     }
 
     async getUsers(): Promise<CmsUser[]> {
-        return await this.cmsUserRepository.find({
-            order: {
+        return await this.cmsUserRepository.findAll({
+            orderBy: {
                 id: 'DESC',
             },
         });
@@ -60,9 +59,7 @@ export class CmsUsersService {
 
     async findById(id: number): Promise<Omit<CmsUser, 'password'>> {
         const { password: _, ...user } = await this.cmsUserRepository.findOne({
-            where: {
-                id: id,
-            },
+            id,
         });
 
         if (!user) {
@@ -109,7 +106,7 @@ export class CmsUsersService {
             );
         }
 
-        return await this.cmsUserRepository.update(id, updateCmsUserDto);
+        return await this.em.insert(updateCmsUserDto);
     }
 
     private async hashPassword(password: string): Promise<string> {
@@ -117,7 +114,16 @@ export class CmsUsersService {
     }
 
     async remove(id: number) {
-        return await this.cmsUserRepository.delete(id);
+        const user = await this.cmsUserRepository.findOne(id);
+
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+
+        // Mark entity for removal
+        await this.em.removeAndFlush(user);
+
+        return { deleted: true, id };
     }
 
     // remove(id: number) {

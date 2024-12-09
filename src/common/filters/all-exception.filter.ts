@@ -8,11 +8,6 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { Request } from 'express';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import {
-    CannotCreateEntityIdMapError,
-    EntityNotFoundError,
-    QueryFailedError,
-} from 'typeorm';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -27,29 +22,14 @@ export class AllExceptionFilter implements ExceptionFilter {
         const { httpAdapter } = this.httpAdapterHost;
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
-        let message = (exception as any).message;
-        let code = 'HttpException';
+        const message = (exception as any).message;
+        const code = 'HttpException';
 
         let status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         switch (exception.constructor) {
             case HttpException:
                 status = (exception as HttpException).getStatus();
-                break;
-            case QueryFailedError: // this is a TypeOrm error
-                status = HttpStatus.UNPROCESSABLE_ENTITY;
-                message = (exception as QueryFailedError).message;
-                code = (exception as any).code;
-                break;
-            case EntityNotFoundError: // this is another TypeOrm error
-                status = HttpStatus.UNPROCESSABLE_ENTITY;
-                message = (exception as EntityNotFoundError).message;
-                code = (exception as any).code;
-                break;
-            case CannotCreateEntityIdMapError: // and another
-                status = HttpStatus.UNPROCESSABLE_ENTITY;
-                message = (exception as CannotCreateEntityIdMapError).message;
-                code = (exception as any).code;
                 break;
             default:
                 status = HttpStatus.INTERNAL_SERVER_ERROR;

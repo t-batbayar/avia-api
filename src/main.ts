@@ -23,6 +23,9 @@ async function bootstrap() {
         }),
     );
 
+    // Starts listening for shutdown hooks
+    app.enableShutdownHooks();
+
     const configService = app.get(ConfigService);
     const mainConfig = configService.get('main');
     const port = mainConfig.port;

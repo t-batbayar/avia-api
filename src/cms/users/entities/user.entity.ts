@@ -1,22 +1,22 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
+    @PrimaryKey()
     id: number;
 
-    @Column()
+    @Property()
     email: string;
 
-    @Column()
+    @Property()
     deviceId: string;
 
-    @Column()
+    @Property()
     loginType: string;
 
-    @Column({ nullable: true })
+    @Property({ nullable: true })
     purchaseEndDate: Date;
 
-    @Column({ type: 'boolean', default: false })
+    @Property({ type: 'boolean', default: false })
     userIsBlocked: boolean;
 }

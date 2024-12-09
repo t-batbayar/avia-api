@@ -1,10 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity()
 export class PaymentStatus {
-    @PrimaryGeneratedColumn()
+    @PrimaryKey()
     id: number;
 
-    @Column({ name: 'payment_enabled', default: false })
+    @Property({ name: 'payment_enabled', default: false })
     paymentEnabled: boolean;
 }

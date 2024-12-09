@@ -1,4 +1,4 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 export enum CmsUserRoles {
     ADMIN = 'ADMIN',
@@ -8,16 +8,16 @@ export enum CmsUserRoles {
 
 @Entity()
 export class CmsUser {
-    @PrimaryGeneratedColumn()
+    @PrimaryKey()
     id: number;
 
-    @Column()
+    @Property()
     name: string;
 
-    @Column({ unique: true })
+    @Property({ unique: true })
     email: string;
 
-    @Column()
+    @Property()
     password: string;
 
     // @Column({

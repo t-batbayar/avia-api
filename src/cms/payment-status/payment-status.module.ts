@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { PaymentStatus } from './entities/payment-status.entity';
 import { PaymentStatusController } from './payment-status.controller';
 import { PaymentStatusService } from './payment-status.service';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([PaymentStatus])],
+    imports: [MikroOrmModule.forFeature([PaymentStatus])],
     controllers: [PaymentStatusController],
     providers: [PaymentStatusService],
 })

@@ -1,10 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-@Entity({ name: 'terms' })
+@Entity({ tableName: 'terms' })
 export class Terms {
-    @PrimaryGeneratedColumn()
+    @PrimaryKey()
     id: number;
 
-    @Column({ nullable: true, type: 'longtext' })
+    @Property({ nullable: true, type: 'longtext' })
     body: string;
 }

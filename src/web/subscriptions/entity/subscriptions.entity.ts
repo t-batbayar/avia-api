@@ -1,22 +1,20 @@
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity()
 export class Subscriptions {
-    @PrimaryGeneratedColumn()
+    @PrimaryKey()
     id: number;
 
-    @Column({ unique: true })
+    @Property({ unique: true })
     email: string;
 
-    @CreateDateColumn({ name: 'created_at', nullable: true })
-    createdAt: Date;
+    @Property({ name: 'created_at', nullable: true })
+    createdAt = new Date();
 
-    @UpdateDateColumn({ name: 'updated_at', nullable: true })
+    @Property({
+        name: 'updated_at',
+        nullable: true,
+        onUpdate: () => new Date(),
+    })
     updatedAt: Date;
 }

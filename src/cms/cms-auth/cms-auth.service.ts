@@ -1,33 +1,27 @@
 import {
     BadRequestException,
-    Inject,
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
-import { Request } from 'express';
-import { Repository } from 'typeorm';
 
-import { CmsPermission } from '../cms-permission/entities/cms-permission.entity';
 import { CmsUser } from '../cms-users/entities/cms-user.entity';
 import { CmsLoginUserDto } from './dto/login-cms-user.dto';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class CmsAuthService {
     constructor(
         @InjectRepository(CmsUser)
-        private cmsUserRepository: Repository<CmsUser>,
+        private cmsUserRepository: EntityRepository<CmsUser>,
     ) {}
 
     async validateUser(
         user: CmsLoginUserDto,
     ): Promise<Omit<CmsUser, 'password' | 'name'>> {
         const foundUser = await this.cmsUserRepository.findOne({
-            where: {
-                email: user.email,
-            },
+            email: user.email,
         });
 
         if (!foundUser || !(await compare(user.password, foundUser.password))) {
@@ -54,9 +48,7 @@ export class CmsAuthService {
 
     async findById(id: number): Promise<Omit<CmsUser, 'password'>> {
         const { password: _, ...user } = await this.cmsUserRepository.findOne({
-            where: {
-                id: id,
-            },
+            id,
         });
 
         if (!user) {

@@ -4,7 +4,6 @@ import {
     NestModule,
     RequestMethod,
 } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { User } from '../cms/users/entities/user.entity';
 import { AuthMiddleware } from '../common/middleware/auth.middleware';
@@ -17,6 +16,7 @@ import { PracticeModule } from './practice/practice.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { TermsModule } from './terms/terms.module';
 import { UsageModule } from './usage/usage.module';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 
 @Module({
     imports: [
@@ -29,39 +29,38 @@ import { UsageModule } from './usage/usage.module';
         LoginModule,
         PaymentStatusModule,
         PaymentModule,
-        TypeOrmModule.forFeature([User]),
+        MikroOrmModule.forFeature([User]),
     ],
     controllers: [],
     providers: [],
 })
 export class WebModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-        const prefix = 'api';
         consumer
             .apply(AuthMiddleware)
             .exclude(
                 {
-                    path: `${prefix}/admin(.*)`,
+                    path: `/admin(.*)`,
                     method: RequestMethod.ALL,
                 },
                 {
-                    path: `${prefix}/privacy`,
+                    path: `/privacy`,
                     method: RequestMethod.GET,
                 },
                 {
-                    path: `${prefix}/terms`,
+                    path: `/terms`,
                     method: RequestMethod.GET,
                 },
                 {
-                    path: `${prefix}/usage`,
+                    path: `/usage`,
                     method: RequestMethod.GET,
                 },
                 {
-                    path: `${prefix}/login`,
+                    path: `/login`,
                     method: RequestMethod.POST,
                 },
                 {
-                    path: `${prefix}/webhook(.*)`,
+                    path: `/webhook(.*)`,
                     method: RequestMethod.GET,
                 },
             )

@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { User } from '../../cms/users/entities/user.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityManager, EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class AccountService {
     constructor(
         @InjectRepository(User)
-        private userRepo: Repository<User>,
+        private userRepo: EntityRepository<User>,
+
+        private em: EntityManager,
     ) {}
 
     async remove(headers: { [key: string]: string }) {
@@ -19,7 +21,7 @@ export class AccountService {
             email: userEmail,
         });
         console.log(user);
-        await this.userRepo.delete({
+        await this.em.remove({
             email: userEmail,
         });
 

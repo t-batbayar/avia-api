@@ -2,14 +2,14 @@ import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { REQUEST } from '@nestjs/core';
-import { InjectRepository } from '@nestjs/typeorm';
 import { customAlphabet } from 'nanoid';
 import { lastValueFrom } from 'rxjs';
-import { Repository } from 'typeorm';
 
 import { CONFIG_NAME_MAIN } from '../../../config/configuration';
 import { User } from '../../cms/users/entities/user.entity';
 import { Payment, PaymentStatus } from './entities/payment.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/mysql';
 
 @Injectable()
 export class PaymentService {
@@ -23,10 +23,10 @@ export class PaymentService {
         private readonly httpService: HttpService,
 
         @InjectRepository(Payment)
-        private paymentRepo: Repository<Payment>,
+        private paymentRepo: EntityRepository<Payment>,
 
         @InjectRepository(User)
-        private userRepo: Repository<User>,
+        private userRepo: EntityRepository<User>,
 
         @Inject(REQUEST) private request: any,
     ) {
@@ -148,7 +148,7 @@ export class PaymentService {
             payment.invoiceId = invoiceId;
             payment.userEmail = userEmail;
             payment.qpayId = qpayInvoiceId;
-            await this.paymentRepo.save(payment);
+            await this.paymentRepo.insert(payment);
 
             return formattedData;
         } catch (error) {
@@ -158,9 +158,7 @@ export class PaymentService {
 
     async paymentResponse(invoiceId: string) {
         const payment = await this.paymentRepo.findOne({
-            where: {
-                invoiceId,
-            },
+            invoiceId,
         });
 
         const accessToken = await this.getAccessToken();
@@ -191,9 +189,7 @@ export class PaymentService {
             data['rows'][0]['payment_status'] === PaymentStatus.PAID
         ) {
             const user = await this.userRepo.findOne({
-                where: {
-                    email: payment.userEmail,
-                },
+                email: payment.userEmail,
             });
 
             let date = new Date();
@@ -206,7 +202,7 @@ export class PaymentService {
             }
 
             user.purchaseEndDate = date;
-            await this.userRepo.save(user);
+            await this.userRepo.upsert(user);
         }
     }
 }
